@@ -11,12 +11,10 @@ class TennisGame1:
     def __init__(self, player1_name, player2_name):
         self.player1 = Player(player1_name)
         self.player2 = Player(player2_name)
+        self._player_lookup = {player1_name: self.player1, player2_name: self.player2}
 
     def won_point(self, player_name):
-        if player_name == self.player1.name:
-            self.player1.won_point()
-        else:
-            self.player2.won_point()
+        self._player_lookup[player_name].won_point()
 
     def equal_points(self):
         result = {
