@@ -7,7 +7,7 @@ from tennis4 import TennisGame4
 from tennis5 import TennisGame5
 from tennis6 import TennisGame6
 from tennis7 import TennisGame7
-from tennis_unittest import play_game, test_cases
+from python.tennis_unittest import play_game, test_cases
 
 
 @pytest.mark.parametrize(
