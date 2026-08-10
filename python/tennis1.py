@@ -20,16 +20,11 @@ class TennisGame1:
         return result
 
     def four_or_more_points(self):
-        minus_result = self.p1points - self.p2points
-        if minus_result == 1:
-            result = "Advantage player1"
-        elif minus_result == -1:
-            result = "Advantage player2"
-        elif minus_result >= 2:
-            result = "Win for player1"
-        else:
-            result = "Win for player2"
-        return result
+        point_difference = self.p1points - self.p2points
+        player_name = "player1" if point_difference > 0 else "player2"
+        score = "Advantage" if abs(point_difference) == 1 else "Win for"
+
+        return f"{score} {player_name}"
 
     def normie_scores(self):
         mapping = {
