@@ -11,7 +11,7 @@ class TennisGame2:
         else:
             self.p2_score()
 
-    def score(self):
+    def tied_score(self):
         result = ""
         if self.p1points == self.p2points and self.p1points < 3:
             if self.p1points == 0:
@@ -21,11 +21,18 @@ class TennisGame2:
             if self.p1points == 2:
                 result = "Thirty"
             result += "-All"
+        return result
+
+    def deuce(self):
+        result = ""
         if self.p1points == self.p2points and self.p1points > 2:
             result = "Deuce"
+        return result
 
+    def p1_has_points(self):
         p1res = ""
         p2res = ""
+        result = ""
         if self.p1points > 0 and self.p2points == 0:
             if self.p1points == 1:
                 p1res = "Fifteen"
@@ -36,6 +43,22 @@ class TennisGame2:
 
             p2res = "Love"
             result = p1res + "-" + p2res
+        return result
+
+    def score(self):
+        p1res = ""
+        p2res = ""
+        result = self.tied_score()
+        if result:
+            return result
+        result = self.deuce()
+        if result:
+            return result
+        result = self.p1_has_points()
+        if result:
+            return result
+        
+
         if self.p2points > 0 and self.p1points == 0:
             if self.p2points == 1:
                 p2res = "Fifteen"
@@ -87,14 +110,6 @@ class TennisGame2:
         ):
             result = "Win for player2"
         return result
-
-    def set_p1_score(self, number):
-        for i in range(number):
-            self.p1_score()
-
-    def set_p2_score(self, number):
-        for i in range(number):
-            self.p2_score()
 
     def p1_score(self):
         self.p1points += 1
