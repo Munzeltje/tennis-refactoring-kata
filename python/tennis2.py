@@ -7,6 +7,9 @@ class GameState:
         self.p1res = ""
         self.p2res = ""
 
+    def as_tuple(self):
+        return (self.result, self.p1res, self.p2res)
+
 class TennisGame2:
     def __init__(self, player1_name, player2_name):
         self.player1_name = player1_name
@@ -32,26 +35,20 @@ class TennisGame2:
             self.gamestate.result += "-All"
 
     def deuce(self):
-        result = ""
         if self.p1points == self.p2points and self.p1points > 2:
-            result = "Deuce"
-        return (result, "", "")
+            self.gamestate.result = "Deuce"
 
     def p1_has_points(self):
-        p1res = ""
-        p2res = ""
-        result = ""
         if self.p1points > 0 and self.p2points == 0:
             if self.p1points == 1:
-                p1res = "Fifteen"
+                self.gamestate.p1res = "Fifteen"
             if self.p1points == 2:
-                p1res = "Thirty"
+                self.gamestate.p1res = "Thirty"
             if self.p1points == 3:
-                p1res = "Forty"
+                self.gamestate.p1res = "Forty"
 
-            p2res = "Love"
-            result = p1res + "-" + p2res
-        return (result, p1res, p2res)
+            self.gamestate.p2res = "Love"
+            self.gamestate.result = self.gamestate.p1res + "-" + self.gamestate.p2res
 
     def p2_has_points(self, gamestate):
         result, p1res, p2res = gamestate
@@ -100,11 +97,11 @@ class TennisGame2:
         self.tied_score()
         if self.gamestate.result:
             return self.gamestate.result
-        result, p1res, p2res = self.deuce()
-        if result:
-            return result
-        gamestate = self.p1_has_points()
-        gamestate = self.p2_has_points(gamestate)
+        self.deuce()
+        if self.gamestate.result:
+            return self.gamestate.result
+        self.p1_has_points()
+        gamestate = self.p2_has_points(self.gamestate.as_tuple())
         gamestate = self.p1_has_more_points(gamestate)
         result, p1res, p2res = self.p2_has_more_points(gamestate)
 
