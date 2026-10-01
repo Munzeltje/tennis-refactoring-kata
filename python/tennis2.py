@@ -1,3 +1,8 @@
+from collections import namedtuple
+
+
+GameState = namedtuple("GameState", ["result", "p1res", "p2res"])
+
 class TennisGame2:
     def __init__(self, player1_name, player2_name):
         self.player1_name = player1_name
@@ -21,13 +26,13 @@ class TennisGame2:
             if self.p1points == 2:
                 result = "Thirty"
             result += "-All"
-        return result
+        return GameState(result, "", "")
 
     def deuce(self):
         result = ""
         if self.p1points == self.p2points and self.p1points > 2:
             result = "Deuce"
-        return result
+        return result, "", ""
 
     def p1_has_points(self):
         p1res = ""
@@ -43,21 +48,16 @@ class TennisGame2:
 
             p2res = "Love"
             result = p1res + "-" + p2res
-        return result
+        return result, p1res, p2res
 
     def score(self):
-        p1res = ""
-        p2res = ""
-        result = self.tied_score()
+        result, p1res, p2res = self.tied_score()
         if result:
             return result
-        result = self.deuce()
+        result, p1res, p2res = self.deuce()
         if result:
             return result
-        result = self.p1_has_points()
-        if result:
-            return result
-        
+        result, p1res, p2res = self.p1_has_points()
 
         if self.p2points > 0 and self.p1points == 0:
             if self.p2points == 1:
