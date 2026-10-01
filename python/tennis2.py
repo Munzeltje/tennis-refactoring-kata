@@ -1,7 +1,11 @@
 from collections import namedtuple
 
 
-GameState = namedtuple("GameState", ["result", "p1res", "p2res"])
+class GameState:
+    def __init__(self):
+        self.result = ""
+        self.p1res = ""
+        self.p2res = ""
 
 class TennisGame2:
     def __init__(self, player1_name, player2_name):
@@ -9,6 +13,7 @@ class TennisGame2:
         self.player2_name = player2_name
         self.p1points = 0
         self.p2points = 0
+        self.gamestate = GameState()
 
     def won_point(self, player_name):
         if player_name == "player1":
@@ -17,22 +22,20 @@ class TennisGame2:
             self.p2_score()
 
     def tied_score(self):
-        result = ""
         if self.p1points == self.p2points and self.p1points < 3:
             if self.p1points == 0:
-                result = "Love"
+                self.gamestate.result = "Love"
             if self.p1points == 1:
-                result = "Fifteen"
+                self.gamestate.result = "Fifteen"
             if self.p1points == 2:
-                result = "Thirty"
-            result += "-All"
-        return GameState(result, "", "")
+                self.gamestate.result = "Thirty"
+            self.gamestate.result += "-All"
 
     def deuce(self):
         result = ""
         if self.p1points == self.p2points and self.p1points > 2:
             result = "Deuce"
-        return GameState(result, "", "")
+        return (result, "", "")
 
     def p1_has_points(self):
         p1res = ""
@@ -48,7 +51,7 @@ class TennisGame2:
 
             p2res = "Love"
             result = p1res + "-" + p2res
-        return GameState(result, p1res, p2res)
+        return (result, p1res, p2res)
 
     def p2_has_points(self, gamestate):
         result, p1res, p2res = gamestate
@@ -62,7 +65,7 @@ class TennisGame2:
 
             p1res = "Love"
             result = p1res + "-" + p2res
-        return GameState(result, p1res, p2res)
+        return (result, p1res, p2res)
 
     def p1_has_more_points(self, gamestate):
         result, p1res, p2res = gamestate
@@ -76,7 +79,7 @@ class TennisGame2:
             if self.p2points == 2:
                 p2res = "Thirty"
             result = p1res + "-" + p2res
-        return GameState(result, p1res, p2res)
+        return (result, p1res, p2res)
 
 
     def p2_has_more_points(self, gamestate):
@@ -91,12 +94,12 @@ class TennisGame2:
             if self.p1points == 2:
                 p1res = "Thirty"
             result = p1res + "-" + p2res
-        return GameState(result, p1res, p2res)
+        return (result, p1res, p2res)
 
     def score(self):
-        result, p1res, p2res = self.tied_score()
-        if result:
-            return result
+        self.tied_score()
+        if self.gamestate.result:
+            return self.gamestate.result
         result, p1res, p2res = self.deuce()
         if result:
             return result
