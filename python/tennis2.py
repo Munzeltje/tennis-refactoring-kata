@@ -32,7 +32,7 @@ class TennisGame2:
         result = ""
         if self.p1points == self.p2points and self.p1points > 2:
             result = "Deuce"
-        return result, "", ""
+        return GameState(result, "", "")
 
     def p1_has_points(self):
         p1res = ""
@@ -48,17 +48,10 @@ class TennisGame2:
 
             p2res = "Love"
             result = p1res + "-" + p2res
-        return result, p1res, p2res
+        return GameState(result, p1res, p2res)
 
-    def score(self):
-        result, p1res, p2res = self.tied_score()
-        if result:
-            return result
-        result, p1res, p2res = self.deuce()
-        if result:
-            return result
-        result, p1res, p2res = self.p1_has_points()
-
+    def p2_has_points(self, gamestate):
+        result, p1res, p2res = gamestate
         if self.p2points > 0 and self.p1points == 0:
             if self.p2points == 1:
                 p2res = "Fifteen"
@@ -69,6 +62,19 @@ class TennisGame2:
 
             p1res = "Love"
             result = p1res + "-" + p2res
+        return GameState(result, p1res, p2res)
+
+
+    def score(self):
+        result, p1res, p2res = self.tied_score()
+        if result:
+            return result
+        result, p1res, p2res = self.deuce()
+        if result:
+            return result
+        gamestate = self.p1_has_points()
+        result, p1res, p2res = self.p2_has_points(gamestate)
+
 
         if self.p1points > self.p2points and self.p1points < 4:
             if self.p1points == 2:
