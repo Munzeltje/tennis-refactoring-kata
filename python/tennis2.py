@@ -67,12 +67,6 @@ class TennisGame2:
         if self.player1.points == self.player2.points and self.player1.points > 2:
             self.result = "Deuce"
 
-    def one_player_has_points(self):
-        if self.highest_score > 0 and self.lowest_score == 0:
-            self.highest_result_string = self._lookup.get(self.highest_score, "")
-            self.lowest_result_string = self._lookup[0]
-            self.result = self.player1.result + "-" + self.player2.result
-
     def one_player_has_more_points(self):
         if self.highest_score > self.lowest_score and self.highest_score < 4:
             self.highest_result_string = self._lookup.get(self.highest_score, "")
@@ -80,28 +74,24 @@ class TennisGame2:
             self.result = self.player1.result + "-" + self.player2.result
 
     def one_player_has_advantage(self):
-        if self.lowest_score >= 3:
+        if self.highest_score > self.lowest_score and self.lowest_score >= 3 and (self.highest_score - self.lowest_score) < 2:
             self.result = f"Advantage {self.highest_player_name}"
 
     def one_player_wins(self):
         if (
             self.highest_score >= 4
             and self.lowest_score >= 0
-            and (self.highest_score- self.lowest_score) >= 2
+            and (self.highest_score - self.lowest_score) >= 2
         ):
             self.result = f"Win for {self.highest_player_name}"
 
     def score(self):
         self.tied_score()
-        if self.result:
-            return self.result
-
         self.deuce()
-        if self.result:
-            return self.result
-
-        self.one_player_has_points()
         self.one_player_has_more_points()
         self.one_player_has_advantage()
         self.one_player_wins()
         return self.result
+
+
+# for next time: use bit patterns to determine which action, each condition (eg self.highest_score > self.lowest_score) is binary
