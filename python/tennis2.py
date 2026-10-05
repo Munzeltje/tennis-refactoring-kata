@@ -18,6 +18,10 @@ class TennisGame2:
             2: "Thirty",
             3: "Forty"
         }
+        self._players_by_name = {
+            player1_name: self.player1,
+            player2_name: self.player2,
+        }
 
     @property
     def highest_score(self):
@@ -51,14 +55,8 @@ class TennisGame2:
     def lowest_player_name(self):
         return min(self.player1, self.player2).name
 
-    def as_tuple(self):
-        return (self.result, self.player1.result, self.player2.result)
-
     def won_point(self, player_name):
-        if player_name == "player1":
-            self.p1_score()
-        else:
-            self.p2_score()
+        self._players_by_name[player_name].points += 1
 
     def tied_score(self):
         if self.player1.points == self.player2.points and self.player1.points < 3:
@@ -107,9 +105,3 @@ class TennisGame2:
         self.one_player_has_advantage()
         self.one_player_wins()
         return self.result
-
-    def p1_score(self):
-        self.player1.points += 1
-
-    def p2_score(self):
-        self.player2.points += 1
