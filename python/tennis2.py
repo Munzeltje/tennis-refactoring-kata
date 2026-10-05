@@ -1,10 +1,12 @@
 class GameState:
-    def __init__(self):
+    def __init__(self, player1_name, player2_name):
         self.result = ""
         self.p1res = ""
         self.p2res = ""
         self.p1points = 0
         self.p2points = 0
+        self.player1_name = player1_name
+        self.player2_name = player2_name
 
     @property
     def highest_score(self):
@@ -36,14 +38,13 @@ class GameState:
         else:
             self.p2res = new_result
 
+
     def as_tuple(self):
         return (self.result, self.p1res, self.p2res)
 
 class TennisGame2:
     def __init__(self, player1_name, player2_name):
-        self.player1_name = player1_name
-        self.player2_name = player2_name
-        self.gamestate = GameState()
+        self.gamestate = GameState(player1_name, player2_name)
         self._lookup = {
             0: "Love",
             1: "Fifteen",
@@ -69,8 +70,7 @@ class TennisGame2:
     def one_player_has_points(self):
         if self.gamestate.highest_score > 0 and self.gamestate.lowest_score == 0:
             self.gamestate.highest_result_string = self._lookup.get(self.gamestate.highest_score, "")
-
-            self.gamestate.lowest_result_string = "Love"
+            self.gamestate.lowest_result_string = self._lookup[0]
             self.gamestate.result = self.gamestate.p1res + "-" + self.gamestate.p2res
 
 
@@ -79,6 +79,30 @@ class TennisGame2:
             self.gamestate.highest_result_string = self._lookup.get(self.gamestate.highest_score, "")
             self.gamestate.lowest_result_string = self._lookup.get(self.gamestate.lowest_score, "")
             self.gamestate.result = self.gamestate.p1res + "-" + self.gamestate.p2res
+
+    def p1_has_advantage(self):
+        if self.gamestate.p1points > self.gamestate.p2points and self.gamestate.p2points >= 3:
+            self.gamestate.result = "Advantage player1"
+
+    def p2_has_advantage(self):
+        if self.gamestate.p2points > self.gamestate.p1points and self.gamestate.p1points >= 3:
+            self.gamestate.result = "Advantage player2"
+
+    def p1_wins(self):
+        if (
+            self.gamestate.p1points >= 4
+            and self.gamestate.p2points >= 0
+            and (self.gamestate.p1points - self.gamestate.p2points) >= 2
+        ):
+            self.gamestate.result = "Win for player1"
+
+    def p2_wins(self):
+        if (
+            self.gamestate.p2points >= 4
+            and self.gamestate.p1points >= 0
+            and (self.gamestate.p2points - self.gamestate.p1points) >= 2
+        ):
+            self.gamestate.result = "Win for player2"
 
     def score(self):
         self.tied_score()
@@ -90,25 +114,11 @@ class TennisGame2:
         self.one_player_has_points()
         self.one_player_has_more_points()
 
+        self.p1_has_advantage()
+        self.p2_has_advantage()
+        self.p1_wins()
+        self.p2_wins()
 
-        if self.gamestate.p1points > self.gamestate.p2points and self.gamestate.p2points >= 3:
-            self.gamestate.result = "Advantage player1"
-
-        if self.gamestate.p2points > self.gamestate.p1points and self.gamestate.p1points >= 3:
-            self.gamestate.result = "Advantage player2"
-
-        if (
-            self.gamestate.p1points >= 4
-            and self.gamestate.p2points >= 0
-            and (self.gamestate.p1points - self.gamestate.p2points) >= 2
-        ):
-            self.gamestate.result = "Win for player1"
-        if (
-            self.gamestate.p2points >= 4
-            and self.gamestate.p1points >= 0
-            and (self.gamestate.p2points - self.gamestate.p1points) >= 2
-        ):
-            self.gamestate.result = "Win for player2"
         return self.gamestate.result
 
     def p1_score(self):
