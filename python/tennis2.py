@@ -4,6 +4,9 @@ class Player:
         self.result = ""
         self.name = name
 
+    def __gt__(self, other):
+        return self.points > other.points
+
 class TennisGame2:
     def __init__(self, player1_name, player2_name):
         self.result = ""
@@ -18,41 +21,35 @@ class TennisGame2:
 
     @property
     def highest_score(self):
-        return self.player1.points if self.player1.points > self.player2.points else self.player2.points        
+        return max(self.player1, self.player2).points
 
     @property
     def lowest_score(self):
-        return self.player1.points if self.player1.points < self.player2.points else self.player2.points
+        return min(self.player1, self.player2).points
 
     @property
     def highest_result_string(self):
-        return self.player1.result if self.player1.points > self.player2.points else self.player2.result      
+        return max(self.player1, self.player2).result
 
     @highest_result_string.setter
     def highest_result_string(self, new_result):
-        if self.player1.points > self.player2.points:
-            self.player1.result = new_result
-        else:
-            self.player2.result = new_result
+        max(self.player1, self.player2).result = new_result
 
     @property
     def lowest_result_string(self):
-        return self.player1.result if self.player1.points < self.player2.points else self.player2.result      
+        return min(self.player1, self.player2).result
 
     @lowest_result_string.setter
     def lowest_result_string(self, new_result):
-        if self.player1.points < self.player2.points:
-            self.player1.result = new_result
-        else:
-            self.player2.result = new_result
+        min(self.player1, self.player2).result = new_result
 
     @property
     def highest_player_name(self):
-        return self.player1.name if self.player1.points > self.player2.points else self.player2.name
+        return max(self.player1, self.player2).name
 
     @property
     def lowest_player_name(self):
-        return self.player1.name if self.player1.points < self.player2.points else self.player2.name
+        return min(self.player1, self.player2).name
 
     def as_tuple(self):
         return (self.result, self.player1.result, self.player2.result)
