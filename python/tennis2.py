@@ -44,6 +44,12 @@ class TennisGame2:
         self.player1_name = player1_name
         self.player2_name = player2_name
         self.gamestate = GameState()
+        self._lookup = {
+            0: "Love",
+            1: "Fifteen",
+            2: "Thirty",
+            3: "Forty"
+        }
 
     def won_point(self, player_name):
         if player_name == "player1":
@@ -53,12 +59,7 @@ class TennisGame2:
 
     def tied_score(self):
         if self.gamestate.p1points == self.gamestate.p2points and self.gamestate.p1points < 3:
-            if self.gamestate.p1points == 0:
-                self.gamestate.result = "Love"
-            if self.gamestate.p1points == 1:
-                self.gamestate.result = "Fifteen"
-            if self.gamestate.p1points == 2:
-                self.gamestate.result = "Thirty"
+            self.gamestate.result = self._lookup.get(self.gamestate.p1points, "")
             self.gamestate.result += "-All"
 
     def deuce(self):
@@ -67,12 +68,7 @@ class TennisGame2:
 
     def one_player_has_points(self):
         if self.gamestate.highest_score > 0 and self.gamestate.lowest_score == 0:
-            if self.gamestate.highest_score == 1:
-                self.gamestate.highest_result_string = "Fifteen"
-            if self.gamestate.highest_score == 2:
-                self.gamestate.highest_result_string = "Thirty"
-            if self.gamestate.highest_score == 3:
-                self.gamestate.highest_result_string = "Forty"
+            self.gamestate.highest_result_string = self._lookup.get(self.gamestate.highest_score, "")
 
             self.gamestate.lowest_result_string = "Love"
             self.gamestate.result = self.gamestate.p1res + "-" + self.gamestate.p2res
@@ -80,14 +76,8 @@ class TennisGame2:
 
     def one_player_has_more_points(self):
         if self.gamestate.highest_score > self.gamestate.lowest_score and self.gamestate.highest_score < 4:
-            if self.gamestate.highest_score == 2:
-                self.gamestate.highest_result_string = "Thirty"
-            if self.gamestate.highest_score == 3:
-                self.gamestate.highest_result_string = "Forty"
-            if self.gamestate.lowest_score == 1:
-                self.gamestate.lowest_result_string = "Fifteen"
-            if self.gamestate.lowest_score == 2:
-                self.gamestate.lowest_result_string = "Thirty"
+            self.gamestate.highest_result_string = self._lookup.get(self.gamestate.highest_score, "")
+            self.gamestate.lowest_result_string = self._lookup.get(self.gamestate.lowest_score, "")
             self.gamestate.result = self.gamestate.p1res + "-" + self.gamestate.p2res
 
     def score(self):
